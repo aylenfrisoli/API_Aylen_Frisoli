@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { randomUUID } from 'crypto';
 import { readJsonFile, writeJsonFile } from './fileStorage';
-import { Tarea } from '../types/tarea.types';
+import { Tarea, DatosNuevaTarea, ActualizarTareaData } from '../types/tarea.types';
 
 // subimos 2 niveles desde __dirname para llegar a data/, asi la ruta funciona igual corriendo con ts-node desde src/ o ya compilado en backend/
 const tareasFilePath = path.join(__dirname, '../../data/tareas.json');
@@ -18,7 +18,7 @@ export async function getTareaById(id: string): Promise<Tarea | undefined> {
 }
 
 // crea una tarea nueva generando el id aca adentro, asi quien llama no tiene que preocuparse por eso
-export async function createTarea(data: Omit<Tarea, 'id'>): Promise<Tarea> {
+export async function createTarea(data: DatosNuevaTarea): Promise<Tarea> {
   const tareas = await getAllTareas();
   const nuevaTarea: Tarea = { id: randomUUID(), ...data };
   tareas.push(nuevaTarea);
@@ -26,8 +26,8 @@ export async function createTarea(data: Omit<Tarea, 'id'>): Promise<Tarea> {
   return nuevaTarea;
 }
 
-// actualiza solo los campos que vengan en data, dejando el resto como estaba (por eso Partial<Tarea>)
-export async function updateTarea(id: string, data: Partial<Tarea>): Promise<Tarea | null> {
+// actualiza solo los campos que vengan en data, dejando el resto como estaba
+export async function updateTarea(id: string, data: ActualizarTareaData): Promise<Tarea | null> {
   const tareas = await getAllTareas();
   const index = tareas.findIndex((tarea) => tarea.id === id);
   if (index === -1) {
