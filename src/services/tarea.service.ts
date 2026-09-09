@@ -1,5 +1,6 @@
 import { getAllTareas, getTareaById, createTarea, updateTarea, deleteTarea } from '../models/tarea.model';
 import { Tarea } from '../types/tarea.types';
+import { NotFoundError, ForbiddenError } from '../utils/errors';
 
 export type NuevaTareaData = Omit<Tarea, 'id' | 'userId'>;
 export type ActualizarTareaData = Partial<NuevaTareaData>;
@@ -19,10 +20,10 @@ export async function crearTarea(userId: string, data: NuevaTareaData): Promise<
 export async function actualizarTarea(userId: string, id: string, data: ActualizarTareaData): Promise<Tarea> {
   const tarea = await getTareaById(id);
   if (!tarea) {
-    throw new Error('Tarea no encontrada');
+    throw new NotFoundError('Tarea no encontrada');
   }
   if (tarea.userId !== userId) {
-    throw new Error('No autorizado');
+    throw new ForbiddenError('No autorizado');
   }
 
   // el update ya sabemos que existe, por eso el "as Tarea" en vez de manejar el null de vuelta
@@ -33,10 +34,10 @@ export async function actualizarTarea(userId: string, id: string, data: Actualiz
 export async function eliminarTarea(userId: string, id: string): Promise<void> {
   const tarea = await getTareaById(id);
   if (!tarea) {
-    throw new Error('Tarea no encontrada');
+    throw new NotFoundError('Tarea no encontrada');
   }
   if (tarea.userId !== userId) {
-    throw new Error('No autorizado');
+    throw new ForbiddenError('No autorizado');
   }
 
   await deleteTarea(id);
