@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes";
 import tareaRoutes from "./routes/tarea.routes";
+import { errorHandler } from "./middlewares/errorHandler.middleware";
 
 dotenv.config();
 
@@ -20,6 +21,9 @@ app.use("/users", authRoutes);
 
 // el crud de tareas queda bajo /items, protegido por verifyToken dentro de tarea.routes
 app.use("/items", tareaRoutes);
+
+// va al final, despues de todas las rutas, porque express solo lo detecta como error handler si es el ultimo middleware con 4 parametros
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
