@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "API RESTful de organizador personal de tareas - TP Integrador",
   "main": "backend/index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
