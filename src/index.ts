@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes";
+import tareaRoutes from "./routes/tarea.routes";
 
 dotenv.config();
 
@@ -16,6 +17,9 @@ app.get("/health", (req, res) => {
 
 // todo lo de auth (register/login) queda bajo /users, como pide la consigna
 app.use("/users", authRoutes);
+
+// el crud de tareas queda bajo /items, protegido por verifyToken dentro de tarea.routes
+app.use("/items", tareaRoutes);
 
 const PORT = process.env.PORT || 3000;
 
