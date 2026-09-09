@@ -28,3 +28,17 @@ export class ValidationError extends AppError {
     super(message, 400);
   }
 }
+
+// se usa cuando el recurso que se quiere crear ya existe (ej: email ya registrado)
+export class ConflictError extends AppError {
+  constructor(message: string) {
+    super(message, 409);
+  }
+}
+
+// se usa cuando las credenciales de login son invalidas
+export class UnauthorizedError extends AppError {
+  constructor(message: string) {
+    super(message, 401);
+  }
+}

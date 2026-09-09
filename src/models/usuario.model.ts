@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { randomUUID } from 'crypto';
 import { readJsonFile, writeJsonFile } from './fileStorage';
-import { Usuario } from '../types/usuario.types';
+import { Usuario, NuevoUsuarioData } from '../types/usuario.types';
 
 // misma idea que en tarea.model.ts, ruta relativa a __dirname para que funcione tanto en dev como compilado
 const usuariosFilePath = path.join(__dirname, '../../data/usuarios.json');
@@ -18,7 +18,7 @@ export async function getUsuarioByEmail(email: string): Promise<Usuario | undefi
 }
 
 // registra un usuario nuevo generando el id aca, el password ya deberia llegar hasheado antes de entrar a esta funcion
-export async function createUsuario(data: Omit<Usuario, 'id'>): Promise<Usuario> {
+export async function createUsuario(data: NuevoUsuarioData): Promise<Usuario> {
   const usuarios = await getAllUsuarios();
   const nuevoUsuario: Usuario = { id: randomUUID(), ...data };
   usuarios.push(nuevoUsuario);

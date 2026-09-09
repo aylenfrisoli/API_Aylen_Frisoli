@@ -1,9 +1,6 @@
 import { getAllTareas, getTareaById, createTarea, updateTarea, deleteTarea } from '../models/tarea.model';
-import { Tarea } from '../types/tarea.types';
+import { NuevaTareaData, ActualizarTareaData, Tarea } from '../types/tarea.types';
 import { NotFoundError, ForbiddenError } from '../utils/errors';
-
-export type NuevaTareaData = Omit<Tarea, 'id' | 'userId'>;
-export type ActualizarTareaData = Partial<NuevaTareaData>;
 
 // trae las tareas del usuario logueado; si viene search, filtra ademas por titulo comparando todo en minusculas para que no importe como lo escriban
 export async function listarTareasDeUsuario(userId: string, search?: string): Promise<Tarea[]> {
