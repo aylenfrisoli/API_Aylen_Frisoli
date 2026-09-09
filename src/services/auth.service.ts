@@ -9,7 +9,10 @@ const SALT_ROUNDS = 10;
 
 // registra un usuario nuevo: chequea que el email no este usado, hashea el password y lo guarda (data ya viene validada por el middleware validate())
 export async function registerUsuario(data: RegisterData): Promise<UsuarioPublico> {
-  const usuarioExistente = await getUsuarioByEmail(data.email);
+  // normalizamos el email a minusculas aca, en el mismo punto donde entra, asi tanto el guardado como la busqueda quedan case-insensitive sin tocar el modelo
+  const email = data.email.toLowerCase();
+
+  const usuarioExistente = await getUsuarioByEmail(email);
   if (usuarioExistente) {
     throw new ConflictError('El email ya está registrado');
   }
@@ -17,7 +20,7 @@ export async function registerUsuario(data: RegisterData): Promise<UsuarioPublic
   const passwordHasheado = await bcrypt.hash(data.password, SALT_ROUNDS);
   const usuario = await createUsuario({
     nombre: data.nombre,
-    email: data.email,
+    email,
     password: passwordHasheado,
   });
 
@@ -28,7 +31,8 @@ export async function registerUsuario(data: RegisterData): Promise<UsuarioPublic
 
 // loguea un usuario: si el email o el password no coinciden tira siempre el mismo error generico, asi no le damos pistas a quien intenta adivinar
 export async function loginUsuario(data: LoginData): Promise<string> {
-  const usuario = await getUsuarioByEmail(data.email);
+  // mismo criterio que en el registro: comparamos siempre en minusculas para que el login no dependa de como escribieron el email
+  const usuario = await getUsuarioByEmail(data.email.toLowerCase());
   if (!usuario) {
     throw new UnauthorizedError('Credenciales inválidas');
   }
