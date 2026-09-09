@@ -5,4 +5,16 @@ export interface Usuario {
   password: string;
 }
 
-export type UsuarioPublico = Omit<Usuario, 'password'>;
+// usuario sin el password, para nunca devolverlo en las respuestas de la API
+export interface UsuarioPublico {
+  id: string;
+  nombre: string;
+  email: string;
+}
+
+// datos para crear un usuario nuevo, el id lo genera el modelo
+export interface NuevoUsuarioData {
+  nombre: string;
+  email: string;
+  password: string;
+}
