@@ -5,10 +5,17 @@ import { NotFoundError, ForbiddenError } from '../utils/errors';
 export type NuevaTareaData = Omit<Tarea, 'id' | 'userId'>;
 export type ActualizarTareaData = Partial<NuevaTareaData>;
 
-// trae solo las tareas del usuario logueado, filtrando sobre el total que devuelve el model
-export async function listarTareasDeUsuario(userId: string): Promise<Tarea[]> {
+// trae las tareas del usuario logueado; si viene search, filtra ademas por titulo comparando todo en minusculas para que no importe como lo escriban
+export async function listarTareasDeUsuario(userId: string, search?: string): Promise<Tarea[]> {
   const tareas = await getAllTareas();
-  return tareas.filter((tarea) => tarea.userId === userId);
+  const tareasDelUsuario = tareas.filter((tarea) => tarea.userId === userId);
+
+  if (!search) {
+    return tareasDelUsuario;
+  }
+
+  const searchEnMinusculas = search.toLowerCase();
+  return tareasDelUsuario.filter((tarea) => tarea.titulo.toLowerCase().includes(searchEnMinusculas));
 }
 
 // crea una tarea asignandole el userId del token, nunca el que venga en el body, asi nadie puede crear tareas a nombre de otro usuario

@@ -3,9 +3,10 @@ import { AuthRequest } from '../middlewares/auth.middleware';
 import { asyncHandler } from '../middlewares/asyncHandler';
 import { listarTareasDeUsuario, crearTarea, actualizarTarea, eliminarTarea } from '../services/tarea.service';
 
-// devuelve todas las tareas del usuario logueado
+// devuelve las tareas del usuario logueado; ?search= filtra por titulo, sin importar mayusculas/minusculas
 export const getAll = asyncHandler(async (req: AuthRequest, res: Response): Promise<void> => {
-  const tareas = await listarTareasDeUsuario(req.userId as string);
+  const search = req.query.search as string | undefined;
+  const tareas = await listarTareasDeUsuario(req.userId as string, search);
   res.status(200).json(tareas);
 });
 
